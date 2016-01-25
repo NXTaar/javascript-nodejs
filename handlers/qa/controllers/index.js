@@ -1,5 +1,5 @@
 
 exports.get = function*() {
 
-  this.body = this.render('index');
+    this.body = this.render('index');
 };
