@@ -1,6 +1,6 @@
-var Questions = require('./models/qaQestion');
-var Answer = require('./models/qaAnswer');
-var Comment = require('./models/qaAswerComment');
+var Questions = require('../models/qaQuestion');
+var Answer = require('../models/qaAnswer');
+var Comment = require('../models/qaAswerComment');
 
 var mongoose = require('mongoose');
 
