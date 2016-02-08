@@ -46,7 +46,6 @@ const schema = new Schema({
   }]
 });
 
-schema.plugin(mongooseTimestamp);
-
+schema.plugin(mongooseTimestamp, {useVirtual: false});
 
 module.exports = mongoose.model('QaQuestion', schema);
