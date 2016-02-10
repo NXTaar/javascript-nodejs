@@ -9,6 +9,7 @@ let request = require("co-request");
 var jar = request.jar();
 request = request.defaults({jar: jar});
 
+const makeAnchor = require('textUtil/makeAnchor');
 
 var csrfToken = null;
 
@@ -23,6 +24,9 @@ function getCsrf(jar) {
     return cookie && cookie.value;
 }
 
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 
 describe.only('Q&A adding questions service', function () {
@@ -72,20 +76,52 @@ describe.only('Q&A adding questions service', function () {
         response.statusCode.should.eql(400);
     });
 
-    it('should add number to the slug if the slug of the title of this question is already in the database', function* () {
-        var fixture_1 = {title: "Одинаковое название вопроса", content: "содержание 1"};
-        var fixture_2 = {title: "Одинаковое название вопроса", content: "содержание 2"};
+    describe('the situation when questions have similar slugs', function () {
 
-        var response_1 = yield request({
-            method: 'POST',
-            url: "http://javascript.in/qa/add-question",
-            form: formWithCSRFToken(fixture_1)
+        it('should add number to the slug if the slug of the title of this question is already in the database', function* () {
+
+            var fixture_1 = {title: "Одинаковое название вопроса", content: "содержание 1"};
+            var fixture_2 = {title: "Одинаковое название вопроса", content: "содержание 2"};
+
+            var response_1 = yield request({
+                method: 'POST',
+                url: "http://javascript.in/qa/add-question",
+                form: formWithCSRFToken(fixture_1)
+            });
+
+            var response_2 = yield request({
+                method: 'POST',
+                url: "http://javascript.in/qa/add-question",
+                form: formWithCSRFToken(fixture_2)
+            });
+
+            var secondQuestionBody = JSON.parse(response_2.body);
+
+            var repeatedQuestion = yield qaQuestion.findById(secondQuestionBody.questionId).exec();
+
+            var requiredSlug = makeAnchor(fixture_2.title, true) + 1;
+
+            repeatedQuestion.slug.should.eql(requiredSlug);
         });
 
-        var response_2 = yield request({
-            method: 'POST',
-            url: "http://javascript.in/qa/add-question",
-            form: formWithCSRFToken(fixture_2)
+        it('should increment the slugCount of the original, regards quantity of the repeats', function* () {
+            var fixture = {title: "Одинаковое название вопроса", content: "содержание"};
+            var quantityOfRepeatingQuestions = getRandomInt(1, 10);
+
+            var original;
+            for (var i = 0; i < quantityOfRepeatingQuestions; i++) {
+                var response = yield request({
+                    method: 'POST',
+                    url: "http://javascript.in/qa/add-question",
+                    form: formWithCSRFToken(fixture)
+                });
+                if (i == 0) original = response;
+            }
+            var originalBody = JSON.parse(original.body)
+
+            var originalQuestion = yield qaQuestion.findById(originalBody.questionId).exec();
+
+            originalQuestion.slugCount.should.eql(quantityOfRepeatingQuestions - 1);
         });
     });
 });
