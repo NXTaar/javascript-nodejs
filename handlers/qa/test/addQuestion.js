@@ -29,7 +29,7 @@ function getRandomInt(min, max) {
 }
 
 
-describe.only('Q&A adding questions service', function () {
+describe('Q&A adding questions service', function () {
 
     before(function*() {
         yield Sessions.remove({});
@@ -43,7 +43,6 @@ describe.only('Q&A adding questions service', function () {
     beforeEach(function* () {
        yield qaQuestion.remove({});
     });
-
 
     it('should add valid question data to the database', function*() {
         var fixture = {title: 'Привет мир?', content: "ля ля ля!"};

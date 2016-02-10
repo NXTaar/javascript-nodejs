@@ -21,7 +21,6 @@ module.exports = function* () {
             }
         }
         catch(e) {
-            //console.log(e); //debug
             if (e.name == 'ValidationError') {
                 this.body = { errorMessages: [] };
                 for (var field in e.errors) {
