@@ -26,6 +26,7 @@ module.exports = function* () {
                 for (var field in e.errors) {
                     if (field !== 'slug') this.body.errorMessages.push(e.errors[field].message);
                 }
+                // todo change for error page render
                 if (this.body.errorMessages.length > 0) this.status = 400;
                 else {
                     this.body = undefined;
@@ -65,6 +66,7 @@ function* saveWithIncrementedSlug(ctx, questionData) {
     }
     catch (e) {
         console.log(e);
+        // todo change for error page render
         ctx.status = 500;
     }
 }

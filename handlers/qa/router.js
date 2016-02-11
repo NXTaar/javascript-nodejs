@@ -10,5 +10,5 @@ router.get("/", index.get);
 
 router.post("/add-question", addQuestion);
 
-router.get("/get-question/:questionIdOrQuestionSlug", getQuestion);
+router.get("/get-question", getQuestion);
 
