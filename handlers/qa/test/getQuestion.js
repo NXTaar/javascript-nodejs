@@ -9,7 +9,7 @@ const makeAnchor = require('textUtil/makeAnchor');
 var originalQuestion;
 var questionIdForm;
 
-describe.only('Q&A get question by ID', function () {
+describe('Q&A get question by ID', function () {
     before(function*() {
         let fixtureUser = yield User.findOne({ profileName: 'iliakan' }).exec();
 

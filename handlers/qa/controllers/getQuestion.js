@@ -5,7 +5,6 @@ var QaQuestion = require('../models/qaQuestion');
 
 module.exports = function* () {
     var data = this.request.body;
-    console.log(idIsValid(data.questionId));
     if (data.questionId && idIsValid(data.questionId)) {
 
         var question = yield QaQuestion.findById(data.questionId).exec();
