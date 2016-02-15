@@ -1,0 +1,52 @@
+'use strict';
+const makeAnchor = require('textUtil/makeAnchor');
+const QaQuestion = require('../models/qaQuestion');
+
+exports.post = function* () {
+    if (!this.user) this.throw(403);
+
+    let body = this.request.body;
+
+    let slug = makeAnchor(body.title, true);
+
+    while (true) {
+        let existingQuestion = yield QaQuestion.findOne({slug});
+
+        if (!existingQuestion) break;
+
+        existingQuestion.slugCount++;
+
+        slug = slug + existingQuestion.slugCount;
+
+        yield existingQuestion.persist();
+    }
+
+    let question = new QaQuestion({
+        title: body.title,
+        content: body.content,
+        user: this.user,
+        slug
+    });
+
+
+    try {
+        let addResult = yield question.persist();
+        this.body = {
+            questionId: addResult._id,
+            status: 'ok'
+        }
+    }
+
+    catch (e) {
+        if (e.name !== 'ValidationError') {
+            throw e;
+        } else {
+            let message;
+            for(let key in e.errors) {
+                message = e.errors[key].message;
+                break;
+            }
+            this.throw(400, message);
+        }
+    }
+};

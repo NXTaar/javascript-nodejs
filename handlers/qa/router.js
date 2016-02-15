@@ -1,24 +1,30 @@
-var Router = require('koa-router');
+'use strict';
 
-var index = require('./controllers/index');
-var addQuestion = require('./controllers/addQuestion');
-var getQuestion = require('./controllers/getQuestion');
-var getQuestionsAll = require('./controllers/getQuestionsAll');
+const Router = require('koa-router');
 
-// developer
-var questionGet = require('./controllers/questionGet');
-// --- //
+const index = require('./controllers/index');
+const questions = require('./controllers/questions');
+//var getQuestion = require('./controllers/getQuestion');
+//var getQuestionsAll = require('./controllers/getQuestionsAll');
 
-var router = module.exports = new Router();
+
+let router = module.exports = new Router();
 
 router.get("/", index.get);
 
-router.post("/add-question", addQuestion);
+router.post("/questions", questions.post);
 
-router.get("/get-question", getQuestion);
 
-router.get("/get-questions-all", getQuestionsAll);
+//router.get("/questions/:questionId", getQuestion);
 
+//router.get("/get-questions-all", getQuestionsAll);
+
+
+
+
+
+// developer
+var getQuestionFront = require('./controllers/getQuestionFront');
 // test function for html layout
-router.get("/get-question-front", questionGet);
-
+router.get("/get-question-front", getQuestionFront);
+// --- //

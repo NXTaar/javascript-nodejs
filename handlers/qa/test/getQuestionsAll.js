@@ -9,7 +9,7 @@ let request = require("co-request");
 const makeAnchor = require('textUtil/makeAnchor');
 
 
-describe.only('Get list of all question sorted by parameter (default the new ones)', function () {
+describe('Get list of all question sorted by parameter (default the new ones)', function () {
     before(function*() {
         let fixtureUser = yield User.findOne({ profileName: 'iliakan' }).exec();
 
@@ -28,6 +28,6 @@ describe.only('Get list of all question sorted by parameter (default the new one
     });
 
     it('should return a list of 10 questions sorted by adding date ', function* () {
-        
+
     });
 });

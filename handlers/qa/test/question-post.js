@@ -1,9 +1,14 @@
 'use strict';
 const mongoose = require('lib/mongoose');
 const Schema = mongoose.Schema;
+
+const User = require('users').User;
+
+
 var Sessions = mongoose.model('Sessions', new Schema({ sid: String, updatedAt: Date, blob: String}), 'sessions');     // collection name
 
 let qaQuestion = require('../models/qaQuestion');
+let fixtureUser;
 
 let request = require("co-request");
 var jar = request.jar();
@@ -29,7 +34,7 @@ function getRandomInt(min, max) {
 }
 
 
-describe('Q&A adding questions service', function () {
+describe.only('Q&A adding questions service', function () {
 
     before(function*() {
         yield Sessions.remove({});
@@ -38,6 +43,8 @@ describe('Q&A adding questions service', function () {
         if (login.statusCode == 200) console.log('login Successfull!');
 
         csrfToken = getCsrf(jar);
+
+        fixtureUser = yield User.findOne({ profileName: 'iliakan' }).exec();
     });
 
     beforeEach(function* () {
@@ -49,7 +56,7 @@ describe('Q&A adding questions service', function () {
 
         var response = yield request({
             method: 'POST',
-            url: "http://javascript.in/qa/add-question",
+            url: "http://javascript.in/qa/questions",
             form: formWithCSRFToken(fixture)
         });
 
@@ -68,7 +75,7 @@ describe('Q&A adding questions service', function () {
 
         var response = yield request({
             method: 'POST',
-            url: "http://javascript.in/qa/add-question",
+            url: "http://javascript.in/qa/questions",
             form: formWithCSRFToken(fixture)
         });
 
@@ -84,13 +91,13 @@ describe('Q&A adding questions service', function () {
 
             var response_1 = yield request({
                 method: 'POST',
-                url: "http://javascript.in/qa/add-question",
+                url: "http://javascript.in/qa/questions",
                 form: formWithCSRFToken(fixture_1)
             });
 
             var response_2 = yield request({
                 method: 'POST',
-                url: "http://javascript.in/qa/add-question",
+                url: "http://javascript.in/qa/questions",
                 form: formWithCSRFToken(fixture_2)
             });
 
@@ -111,16 +118,46 @@ describe('Q&A adding questions service', function () {
             for (var i = 0; i < quantityOfRepeatingQuestions; i++) {
                 var response = yield request({
                     method: 'POST',
-                    url: "http://javascript.in/qa/add-question",
+                    url: "http://javascript.in/qa/questions",
                     form: formWithCSRFToken(fixture)
                 });
                 if (i == 0) original = response;
             }
-            var originalBody = JSON.parse(original.body)
+            var originalBody = JSON.parse(original.body);
 
             var originalQuestion = yield qaQuestion.findById(originalBody.questionId).exec();
 
             originalQuestion.slugCount.should.eql(quantityOfRepeatingQuestions - 1);
+        });
+
+        it('should add the question with the "slug" properly if there is "slug" and "slug1" already in the database', function* () {
+            var fixture_1 = {
+                title: "Вопрос с доступом по id",
+                content: "Содержание вопроса",
+                slug: makeAnchor("Вопрос с доступом по id", true),
+                user: fixtureUser
+            };
+
+            var fixture_2 = {
+                title: "Вопрос с доступом по id1",
+                content: "Содержание вопроса",
+                slug: makeAnchor("Вопрос с доступом по id1", true),
+                user: fixtureUser
+            };
+
+            yield new qaQuestion(fixture_1).persist();
+            yield new qaQuestion(fixture_2).persist();
+
+            var response = yield request({
+                method: 'POST',
+                url: "http://javascript.in/qa/questions",
+                form: formWithCSRFToken({
+                    title: "Вопрос с доступом по id",
+                    content: "бла бла бла"
+                })
+            });
+
+            response.statusCode.should.eql(200);
         });
     });
 });

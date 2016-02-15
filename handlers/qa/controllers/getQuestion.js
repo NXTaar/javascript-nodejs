@@ -19,7 +19,8 @@ module.exports = function* () {
     }
     else {
         // todo change for error page render
-        this.status = 400;
-        this.body = { errorMessage: "The id of the question is not provided" }
+        this.throw(404);
+        //this.status = 400;
+        //this.body = { errorMessage: "The id of the question is not provided" }
     }
 };
