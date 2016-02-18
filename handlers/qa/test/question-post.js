@@ -34,7 +34,7 @@ function getRandomInt(min, max) {
 }
 
 
-describe.only('Q&A adding questions service', function () {
+describe('Q&A adding questions service', function () {
 
     before(function*() {
         yield Sessions.remove({});
