@@ -1,14 +1,13 @@
 'use strict';
-var mongoose = require('mongoose');
 const QaQuestion = require('../models/qaQuestion');
 const User = require('users').User;
 
 let request = require("co-request");
 
 const makeAnchor = require('textUtil/makeAnchor');
-var questionIdForm;
+let questionIdForm;
 
-describe.only('Q&A get question by ID', function () {
+describe.only('Q&A get question by slug', function () {
     before(function*() {
         let fixtureUser = yield User.findOne({ profileName: 'iliakan' }).exec();
 
@@ -26,18 +25,6 @@ describe.only('Q&A get question by ID', function () {
         questionIdForm = idQuestion._id.toString();
     });
 
-
-
-    it('should return the question object by request with id', function* () {
-        var response = yield request({
-            method: 'GET',
-            url: "http://javascript.in/qa/questions/"+questionIdForm
-        });
-
-        var questionInfo = JSON.parse(response.body);
-        questionInfo._id.should.eql(questionIdForm);
-    });
-
     it('should return the question object by request with slug', function* () {
         var response = yield request({
             method: 'GET',
@@ -47,11 +34,11 @@ describe.only('Q&A get question by ID', function () {
         var questionInfo = JSON.parse(response.body);
         questionInfo.slug.should.eql("vopros-s-dostupom-po-id");
     });
-    
-    it('should return status 404 if there is no such questionId or slug in the database', function* () {
+
+    it('should return status 404 if there is no such question in the database', function* () {
         var response = yield request({
             method: 'GET',
-            url: "http://javascript.in/qa/questions/56bd197752137e5b158ead8e"
+            url: "http://javascript.in/qa/questions/test-12312"
         });
         response.statusCode.should.eql(404);
     });

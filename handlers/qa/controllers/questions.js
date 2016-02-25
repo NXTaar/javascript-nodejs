@@ -1,30 +1,8 @@
 'use strict';
 const mongoose = require('mongoose');
-const idIsValid = mongoose.Types.ObjectId.isValid;
-
 const QaQuestion = require('../models/qaQuestion');
 
 const makeAnchor = require('textUtil/makeAnchor');
-
-exports.byId = {};
-
-exports.byId.get  = function* () {
-    let question;
-
-    if (idIsValid(this.params.id)) {
-        question = yield QaQuestion.findById(this.params.id).exec();
-    }
-    else {
-        let slug = this.params.id;
-        question = yield QaQuestion.findOne({slug}).exec();
-    }
-
-    if (question == null) this.throw(404);
-
-    //todo change to template render
-    this.body = question;
-
-};
 
 exports.get = function* () {
 
