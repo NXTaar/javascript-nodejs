@@ -14,7 +14,7 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-describe.only('Get list of all question sorted by parameter (default the new ones)', function () {
+describe('Get list of all question sorted by parameter (default the new ones)', function () {
     beforeEach(function*() {
         let fixtureUser = yield User.findOne({ profileName: 'iliakan' }).exec();
 

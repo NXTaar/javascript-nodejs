@@ -110,26 +110,6 @@ describe('Q&A adding questions service', function () {
             repeatedQuestion.slug.should.eql(requiredSlug);
         });
 
-        it('should increment the slugCount of the original, regards quantity of the repeats', function* () {
-            var fixture = {title: "Одинаковое название вопроса", content: "содержание"};
-            var quantityOfRepeatingQuestions = getRandomInt(1, 10);
-
-            var original;
-            for (var i = 0; i < quantityOfRepeatingQuestions; i++) {
-                var response = yield request({
-                    method: 'POST',
-                    url: "http://javascript.in/qa/questions",
-                    form: formWithCSRFToken(fixture)
-                });
-                if (i == 0) original = response;
-            }
-            var originalBody = JSON.parse(original.body);
-
-            var originalQuestion = yield qaQuestion.findById(originalBody.questionId).exec();
-
-            originalQuestion.slugCount.should.eql(quantityOfRepeatingQuestions - 1);
-        });
-
         it('should add the question with the "slug" properly if there is "slug" and "slug1" already in the database', function* () {
             var fixture_1 = {
                 title: "Вопрос с доступом по id",
@@ -157,7 +137,7 @@ describe('Q&A adding questions service', function () {
                 })
             });
 
-            response.statusCode.should.eql(200);
+            response.statusCode.should.eql(201);
         });
     });
 });

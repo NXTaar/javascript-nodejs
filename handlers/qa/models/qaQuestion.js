@@ -30,11 +30,6 @@ const schema = new Schema({
     required: true,
     unique:   true
   },
-  slugCount:  {
-    type: Number,
-    required: true,
-    default: 0
-  },
   user:       {
     type: Schema.ObjectId,
     ref:  'User',

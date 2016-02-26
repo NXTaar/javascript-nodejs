@@ -16,17 +16,9 @@ exports.post = function* () {
 
     let slug = makeAnchor(body.title, true);
 
-    while (true) {
-        let existingQuestion = yield QaQuestion.findOne({slug});
+    let existingQuestions = yield QaQuestion.count({slug: new RegExp(`^${slug}\\d*$`)});
 
-        if (!existingQuestion) break;
-
-        existingQuestion.slugCount++;
-
-        slug = slug + existingQuestion.slugCount;
-
-        yield existingQuestion.persist();
-    }
+    if (existingQuestions > 0) slug += existingQuestions;
 
     let question = new QaQuestion({
         title: body.title,
