@@ -7,7 +7,7 @@ let request = require("co-request");
 const makeAnchor = require('textUtil/makeAnchor');
 let questionIdForm;
 
-describe.only('Q&A get question by slug', function () {
+describe('Q&A get question by slug', function () {
     before(function*() {
         let fixtureUser = yield User.findOne({ profileName: 'iliakan' }).exec();
 

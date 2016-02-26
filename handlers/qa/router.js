@@ -18,6 +18,8 @@ router.post("/questions", questions.post);
 router.get("/questions", questions.get);
 router.get("/questions/:slug", questionsBySlug.get);
 
+//todo PUT для вопроса, например, чтобы отметить, что у вопроса есть решение
+
 router.get("/api/questions/:id", apiQuestionsById.get);
 router.get("/api/questions", apiQuestions.get);
 
@@ -26,6 +28,5 @@ router.get("/api/questions", apiQuestions.get);
 
 // developer, remove when question page render is done
 var getQuestionFront = require('./controllers/getQuestionFront');
-// test function for html layout
 router.get("/get-question-front", getQuestionFront);
 // --- //
