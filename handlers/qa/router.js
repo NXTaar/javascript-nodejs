@@ -8,15 +8,14 @@ const questionsBySlug = require('./controllers/questionsBySlug');
 
 const apiQuestionsById = require('./controllers/apiQuestionsById');
 
-const questionsList = new (require('./controllers/questionsList'));
-
+const questionsList = require('./controllers/questionsList');
 
 let router = module.exports = new Router();
 
 router.get("/", index.get);
 
 router.post("/questions", questions.post);
-router.get("/questions", questions.get);
+router.get( "/questions", questionsList.get('forHuman'));
 router.get("/questions/:slug", questionsBySlug.get);
 
 //todo PUT для вопроса, например, чтобы отметить, что у вопроса есть решение

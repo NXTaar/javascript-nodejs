@@ -55,7 +55,10 @@ describe('Get list of all question sorted by parameter (default the new ones)', 
         let questions1 = JSON.parse(response1.body);
         let questions2 = JSON.parse(response2.body);
 
-        var check = yield QaQuestion.find({_id: {$gt: questions2[0]._id}}).sort({_id: 1 }).limit(1).exec();
+        var check = yield QaQuestion.find({_id: {$gt: questions2[0]._id}})
+                                    .sort({_id: 1 })
+                                    .limit(1)
+                                    .exec();
         check[0]._id.toString().should.eql(questions1[4]._id);
     });
 
