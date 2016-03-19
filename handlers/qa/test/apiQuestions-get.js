@@ -14,7 +14,7 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-describe('Get list of all question sorted by parameter (default the new ones)', function () {
+describe.only('Get list of all question sorted by parameter (default the new ones)', function () {
     beforeEach(function*() {
         let fixtureUser = yield User.findOne({ profileName: 'iliakan' }).exec();
 
@@ -62,7 +62,7 @@ describe('Get list of all question sorted by parameter (default the new ones)', 
         check[0]._id.toString().should.eql(questions1[4]._id);
     });
 
-    it('should return 400 if the query tries get more than 20 items per page', function* () {
+    it('should return 400 if the query tries get more than 100 items per page', function* () {
         var response = yield request({
             method: 'GET',
             url: "http://javascript.in/qa/api/questions?items=500"

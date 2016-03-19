@@ -3,9 +3,22 @@ const mongoose = require('mongoose');
 const QaQuestion = require('../models/qaQuestion');
 
 const makeAnchor = require('textUtil/makeAnchor');
+const url = require('url');
+const querystring = require('querystring');
+
+const questionsList = require('./questionsList');
 
 exports.get = function* () {
+    let requestQuery = url.parse(this.request.url).query;
+    let requestParams = querystring.parse(requestQuery);
+    let page = requestParams.page || 0;
 
+    let result = yield questionsList.get({page});
+
+    if (result.status !== 200) this.throw(result.status);
+
+    // todo заменить заглушку когда будет готов шаблон
+    this.body = result.questionsList;
 };
 
 
