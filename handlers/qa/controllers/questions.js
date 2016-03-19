@@ -9,16 +9,18 @@ const querystring = require('querystring');
 const questionsList = require('./questionsList');
 
 exports.get = function* () {
-    let requestQuery = url.parse(this.request.url).query;
+    let requestQuery  = url.parse(this.request.url).query;
     let requestParams = querystring.parse(requestQuery);
-    let page = requestParams.page || 0;
 
-    let result = yield questionsList.get({page});
+    let page      = requestParams.page || 0;
+    let dateLimit = requestParams.dateLimit || (new Date).toISOString();
+
+    let result = yield questionsList.get({page, dateLimit});
 
     if (result.status !== 200) this.throw(result.status);
 
     // todo заменить заглушку когда будет готов шаблон
-    this.body = result.questionsList;
+    this.body = {questionsList: result.questionsList, dateLimit: result.dateLimit};
 };
 
 
